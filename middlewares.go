@@ -17,14 +17,8 @@
 package polaris
 
 import (
-	"context"
-	"sync"
-	"time"
-
+	polariskitex "github.com/cloudwego-contrib/cwgo-pkg/registry/polaris/polariskitex"
 	"github.com/cloudwego/kitex/pkg/endpoint"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/cloudwego/kitex/pkg/rpcinfo/remoteinfo"
-	"github.com/polarismesh/polaris-go/api"
 )
 
 const (
@@ -34,44 +28,5 @@ const (
 
 // NewUpdateServiceCallResultMW report call result for circuitbreak
 func NewUpdateServiceCallResultMW(configFile ...string) endpoint.Middleware {
-	return func(next endpoint.Endpoint) endpoint.Endpoint {
-		var (
-			callResultSdkCtx      api.SDKContext
-			callResultConsumerAPI api.ConsumerAPI
-			callResultOnce        sync.Once
-		)
-		var err error
-		callResultOnce.Do(func() {
-			callResultSdkCtx, err = GetPolarisConfig(configFile...)
-			callResultConsumerAPI = api.NewConsumerAPIByContext(callResultSdkCtx)
-		})
-		if err != nil {
-			return func(ctx context.Context, req, resp interface{}) (err error) {
-				return err
-			}
-		}
-		return func(ctx context.Context, request, response interface{}) error {
-			retCode := int32(retSuccessCode)
-			retStatus := api.RetSuccess
-			begin := time.Now()
-			kitexCallErr := next(ctx, request, response)
-			cost := time.Since(begin)
-			if kitexCallErr != nil {
-				retCode = retFailCode
-				retStatus = api.RetFail
-			}
-
-			svcCallResult := &api.ServiceCallResult{}
-
-			ri := rpcinfo.GetRPCInfo(ctx)
-			svcCallResult.CalledInstance = ri.To().(remoteinfo.RemoteInfo).GetInstance().(*polarisKitexInstance).polarisInstance
-
-			svcCallResult.SetRetCode(retCode)
-			svcCallResult.SetRetStatus(retStatus)
-			svcCallResult.SetDelay(cost)
-			// 执行调用结果上报
-			_ = callResultConsumerAPI.UpdateServiceCallResult(svcCallResult)
-			return kitexCallErr
-		}
-	}
+	return polariskitex.NewUpdateServiceCallResultMW(configFile...)
 }

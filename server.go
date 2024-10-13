@@ -16,6 +16,6 @@
 
 package polaris
 
-type ServerOptions struct {
-	Metadata map[string]string
-}
+import polariskitex "github.com/cloudwego-contrib/cwgo-pkg/registry/polaris/polariskitex"
+
+type ServerOptions = polariskitex.ServerOptions

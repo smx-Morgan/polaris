@@ -17,72 +17,14 @@
 package polaris
 
 import (
-	"log"
-
-	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/discovery"
-	"github.com/cloudwego/kitex/pkg/endpoint"
-	"github.com/cloudwego/kitex/pkg/loadbalance"
+	polariskitex "github.com/cloudwego-contrib/cwgo-pkg/registry/polaris/polariskitex"
 )
 
-type ClientOptions struct {
-	DstMetadata  map[string]string `json:"dst_metadata"`
-	SrcNamespace string            `json:"src_namespace"`
-	SrcService   string            `json:"src_service"`
-	SrcMetadata  map[string]string `json:"src_metadata"`
-}
+type ClientOptions = polariskitex.ClientOptions
 
 // ClientSuite It is used to assemble multiple associated client's Options
-type ClientSuite struct {
-	DstNameSpace       string                   // dest namespace for service discovery
-	Resolver           discovery.Resolver       // service discovery component
-	Balancer           loadbalance.Loadbalancer // load balancer
-	ReportCallResultMW endpoint.Middleware      // report service call result for circuitbreak
-}
+type ClientSuite = polariskitex.ClientSuite
 
 func NewDefaultClientSuite() *ClientSuite {
 	return &ClientSuite{}
-}
-
-// Options implements the client.Suite interface.
-func (cs *ClientSuite) Options() []client.Option {
-	var opts []client.Option
-
-	if len(cs.DstNameSpace) <= 0 {
-		cs.DstNameSpace = DefaultPolarisNamespace
-	}
-	opts = append(opts, client.WithTag(DstNameSpaceTagKey, cs.DstNameSpace))
-
-	var resolver discovery.Resolver
-	if cs.Resolver != nil {
-		resolver = cs.Resolver
-	} else {
-		o := ClientOptions{}
-		r, err := NewPolarisResolver(o)
-		if err != nil {
-			log.Fatal(err)
-		}
-		resolver = r
-	}
-	opts = append(opts, client.WithResolver(resolver))
-
-	var lb loadbalance.Loadbalancer
-	if cs.Balancer != nil {
-		lb = cs.Balancer
-	} else {
-		pb, err := NewPolarisBalancer()
-		if err != nil {
-			log.Fatal(err)
-		}
-		lb = pb
-	}
-	opts = append(opts, client.WithLoadBalancer(lb))
-
-	if cs.ReportCallResultMW != nil {
-		opts = append(opts, client.WithMiddleware(cs.ReportCallResultMW))
-	} else {
-		opts = append(opts, client.WithMiddleware(NewUpdateServiceCallResultMW()))
-	}
-
-	return opts
 }
