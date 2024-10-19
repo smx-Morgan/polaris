@@ -21,11 +21,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/endpoint"
 )
 
-const (
-	retSuccessCode = 0
-	retFailCode    = -1
-)
-
 // NewUpdateServiceCallResultMW report call result for circuitbreak
 func NewUpdateServiceCallResultMW(configFile ...string) endpoint.Middleware {
 	return polariskitex.NewUpdateServiceCallResultMW(configFile...)

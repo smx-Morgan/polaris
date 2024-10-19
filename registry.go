@@ -17,16 +17,7 @@
 package polaris
 
 import (
-	"time"
-
 	polariskitex "github.com/cloudwego-contrib/cwgo-pkg/registry/polaris/polariskitex"
-)
-
-var (
-	defaultHeartbeatIntervalSec = 5
-	registerTimeout             = 10 * time.Second
-	heartbeatTimeout            = 5 * time.Second
-	heartbeatTime               = 5 * time.Second
 )
 
 // Registry is extension interface of Kitex registry.Registry.
