@@ -8,7 +8,6 @@ require (
 	github.com/cloudwego-contrib/cwgo-pkg/registry/polaris v0.0.0-00010101000000-000000000000
 	github.com/cloudwego/kitex v0.11.0
 	github.com/cloudwego/kitex-examples v0.3.3
-	github.com/pkg/errors v0.9.1
 	github.com/polarismesh/polaris-go v1.3.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sync v0.8.0
@@ -50,6 +49,7 @@ require (
 	github.com/modern-go/gls v0.0.0-20220109145502-612d0167dce5 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
@@ -74,6 +74,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/cloudwego-contrib/cwgo-pkg/registry/polaris => ../cwgo-pkg-registry/registry/polaris
+replace github.com/cloudwego-contrib/cwgo-pkg/registry/polaris => github.com/smx-Morgan/cwgo-pkg/registry/polaris v0.0.0-20241016000926-d56ef7e0f578
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
